@@ -57,11 +57,17 @@ footer, header, hgroup, menu, nav, section {
 .all{
     border-style: solid;
     border-color: black;
-    padding: 1%;
+    padding: .5%;
+    margin-top: 1%;
     display: flex;
     flex-direction: row;
     text-align: center;
     align-items: center;
+    
+    background-color: white; 
+    position: sticky;
+    top: 0;
+    z-index: 20;
     
 }
 
@@ -76,4 +82,18 @@ footer, header, hgroup, menu, nav, section {
 
 .test {
     padding-left:35%;
+}
+
+.randomMoveButton{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-top: 2%;
+}
+
+.randomMoveButton button{
+    position: absolute;
+    color: black;
+    background-color: white;
+    padding: 1%;
 }
