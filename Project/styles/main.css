@@ -33,6 +33,7 @@ footer, header, hgroup, menu, nav, section {
 }
 
 
+/* responsive design  */
 @media only screen and (max-width: 1000px){
 	[class*="col-"]{
 		width:100%;
@@ -42,7 +43,7 @@ footer, header, hgroup, menu, nav, section {
     }
 }   
 	
-
+/* screen bigger than 700px */
 @media only screen and (min-width: 700px){
 	[class*="col-"]{
 		width:8.33%;
