@@ -30,6 +30,7 @@
       <header>
         <nav>
           <div class="all">
+            <!-- need to fix it -->
             <a id="uvaMovesHeader" href="index.html">UVA MOVES</a>
             <div class="test">
               <a href="Restaurant.html"> Restaurants </a> |
@@ -59,9 +60,12 @@
     <!-- this will be produced using php code later -->
     <div class="container showdown">
       <div class="row restaurants">
-        <div class="col-6 left">
+        <div class="col col-sm-auto col-md-6 left">
           <!-- pics on left-->
-          <a class="btn btn-outline-danger" href="./del?id=" role="button"
+          <a
+            class="btn btn-outline-danger btn-sm"
+            href="./del?id="
+            role="button"
             >Not interested?</a
           >
           &nbsp;
@@ -73,53 +77,7 @@
             alt="villa"
           />
         </div>
-        <div class="col-6 right">
-          <!-- reviews and info the right, static page for now -->
-          <div class="row">
-            <!--  info, table -->
-            <div class="card text-center">
-              <div class="card-header">The Villa Diner</div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-sm">
-                    <thead>
-                      <th scope="col">rating</th>
-                      <th scope="col">address</th>
-                      <th scope="col">contact</th>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>4.5</td>
-                        <td>1250 Emmet Street N</td>
-                        <td>434-296-9977</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="card-footer text-muted">
-                <a href="https://www.thevilladiner.com/">view more on </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row restaurants">
-        <div class="col-6 left">
-          <!-- pics on left-->
-          <a class="btn btn-outline-danger" href="./del?id=" role="button"
-            >Not interested?</a
-          >
-          &nbsp;
-          <!-- img will pop up after click will add this function later -->
-          <img
-            class="img-fluid"
-            src="https://images.squarespace-cdn.com/content/v1/5b1f11e53c3a537ba562331e/1539476146313-8G9HUCOZTO8ELTYJNZKN/front+of+the+building+.JPG?format=500w"
-            alt="villa"
-          />
-        </div>
-        <div class="col-6 right">
+        <div class="col col-md-6 col-sm-auto right">
           <!-- reviews and info the right, static page for now -->
           <div class="row">
             <!--  info, table -->
