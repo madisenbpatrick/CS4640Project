@@ -18,6 +18,8 @@ class UvaMoves{
             case "login":
                 $this-> login();
                 break;
+            case "logout":
+                $this->destroyCookies();
             case "homepage":
                 $this->homepage();
                 break;
@@ -26,6 +28,12 @@ class UvaMoves{
                 break;
             case "profile":
                 $this->profile();
+                break;
+            case "yourReviews":
+                $this->yourReviews();
+                break;
+            case "yourFavorites":
+                $this->yourFavorites();
                 break;
             case "restaurant":
                 $this->restaurant();
@@ -42,6 +50,14 @@ class UvaMoves{
     }
 
     private function login(){
+        if (!isset($_COOKIE["email"])) {
+            // they need to see the login
+            $command = "login";
+        }
+        else {
+            // if login go straight to review page 
+            header("Location: ?command=review");
+        }
         if (isset($_POST["email"])) {
 
             $data = $this->db->query("select * from uvaMoves_users where email = ?;", "s", $_POST["email"]);
@@ -89,6 +105,15 @@ class UvaMoves{
         include("templates/login.php");
 
     }
+    private function destroyCookies() {          
+        setcookie("name", "", time() - 3600);
+        unset($_SESSION['name']);
+        setcookie("email", "", time() - 3600);
+        unset($_SESSION['email']);
+        session_destroy();
+        //echo "Hi " . $_COOKIE["name"];
+    }
+    
 
     private function homepage(){
         include("templates/homepage.php");
@@ -102,6 +127,38 @@ class UvaMoves{
     private function profile(){
         include("templates/profile.php");
     }
+    private function yourReviews(){
+        $uvaMoves_reviews = $this-> loadYourReviews();
+
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+        ];
+
+        include("templates/yourReviews.php");
+    }
+
+    private function loadYourReviews(){
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+        ];
+
+        $data = $this->db->query("select * from uvaMoves_reviews where user_id = ?;",
+                                 "i", $user["id"]);
+        
+        if(!isset($data[0])){
+            $error_msg = "No Reviews yet";
+        } 
+        return $data;                       
+    }
+
+
+    private function yourFavorites(){
+        include("templates/yourFavorites.php");
+    }
 
     private function restaurant(){
         
@@ -109,6 +166,28 @@ class UvaMoves{
     }
 
     private function review(){
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+        ];
+
+        if(!empty($_POST["r_name"]) && !empty($_POST["review"])){
+            $insert =$this->db->query("insert into uvaMoves_reviews (user_id, category, r_name, review, rating)
+                                    values (?,?,?,?,?);","isssi",$user["id"],$_POST["category"],$_POST["r_name"],
+                                    $_POST["review"], $_POST["rating"]);
+            
+            if ($insert === false) {
+                $error_msg = "Error inserting user";
+            }
+            else{
+                header("Location: ?command=profile");
+            }
+
+            return;
+            
+        }
+
         include("templates/review.php");
     }
 
