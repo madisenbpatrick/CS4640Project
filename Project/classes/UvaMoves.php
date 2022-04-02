@@ -32,6 +32,11 @@ class UvaMoves{
             case "yourReviews":
                 $this->yourReviews();
                 break;
+            case "editReview":
+                $this->editReview();
+                break;
+            case "deleteReview":
+                break;
             case "yourFavorites":
                 $this->yourFavorites();
                 break;
@@ -180,6 +185,35 @@ class UvaMoves{
         return $data;                       
     }
 
+    private function editReview(){
+
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+        ];
+
+        if(!empty($_POST["r_name"]) && !empty($_POST["review"])){
+            $insert =$this->db->query("insert into uvaMoves_reviews (user_id, category, r_name, review, rating)
+                                    values (?,?,?,?,?);","isssi",$user["id"],$_POST["category"],$_POST["r_name"],
+                                    $_POST["review"], $_POST["rating"]);
+            
+            if ($insert === false) {
+                $error_msg = "Error inserting user";
+            }
+            else{
+                header("Location: ?command=yourReviews");
+            }
+
+            return;
+            
+        }
+        else{
+            $error_msg = "Error inserting user";
+        }
+
+        include("templates/editReview.php");
+    }
 
     private function yourFavorites(){
         include("templates/yourFavorites.php");
