@@ -110,6 +110,8 @@ class UvaMoves{
         unset($_SESSION['name']);
         setcookie("email", "", time() - 3600);
         unset($_SESSION['email']);
+        setcookie("id",0,time()-3600);
+        unset($_SESSION["id"]);
         session_destroy();
         //echo "Hi " . $_COOKIE["name"];
     }
@@ -161,8 +163,31 @@ class UvaMoves{
     }
 
     private function restaurant(){
-        
+        $uvaMoves_restReviews = $this->loadRestReviews();
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+        ];
+
         include("templates/restaurant.php");
+    }
+
+    private function loadRestReviews(){
+        
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+        ];
+
+        $data = $this->db->query("select * from uvaMoves_reviews where category = ? order by rand();","s","r_restaurant");
+
+        if(!isset ($data[0])){
+            die("No questions in the database");
+        }
+        
+        return $data;
     }
 
     private function review(){
@@ -182,7 +207,7 @@ class UvaMoves{
                 $error_msg = "Error inserting user";
             }
             else{
-                header("Location: ?command=profile");
+                header("Location: ?command=yourReviews");
             }
 
             return;

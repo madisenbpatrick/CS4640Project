@@ -24,6 +24,15 @@
       type="text/css"
       href="styles/indexstyles.less"
     />
+    <style>
+      .allRestReviews{
+        display:flex;
+        flex-direction: column;
+        margin-top:5%;
+        align-items: center;
+      }
+      
+    </style>
   </head>
   <body>
     <div class="headerDiv">
@@ -53,7 +62,47 @@
             </div>
     </div>
 
-    
+    <section class = "allRestReviews">
+    <h4>Restaurant Reviews</h4>
+    <div class="col col-md-6 col-sm-auto right">
+    <div class="row">
+    <?php
+    if(is_array($uvaMoves_restReviews)){
+      $sn=1;
+      foreach($uvaMoves_restReviews as $i){
+        ?>
+              <div class="card text-center">
+                <div class="card-header"> <?php echo $i["r_name"]??'';?></div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-sm">
+                      <thead>
+                        <th scope="col">Review</th>
+                        <th scope="col">Rating</th>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><?php echo $i["review"]??'';?></td>
+                          <td><?php echo $i["rating"]??'';?></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <?php 
+      $sn++;}} 
+    else{?>
+      <tr>
+      <td> <?php echo $uvaMoves_reviews; ?>
+      </td>
+
+      <tr>
+      <?php
+    }?>
+    </div>
+    </div>
+
+  </section>
     </div>
 
     <script
