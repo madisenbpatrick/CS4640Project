@@ -23,59 +23,62 @@ time, mark, audio, video {
 	vertical-align: baseline;
 } */
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure, 
-footer, header, hgroup, menu, nav, section {
-	display: block;
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
 }
 
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
-
 
 /* responsive design  */
-@media only screen and (max-width: 1000px){
-	[class*="col-"]{
-		width:100%;
-    }
-    #uvaMapArt{
-        width:200px;
-    }
-}   
-	
+@media only screen and (max-width: 1000px) {
+  [class*="col-"] {
+    width: 100%;
+  }
+  #uvaMapArt {
+    width: 200px;
+  }
+}
+
 /* screen bigger than 700px */
-@media only screen and (min-width: 700px){
-	[class*="col-"]{
-		width:8.33%;
-    }
-    #uvaMapArt{
-        width: 500px;
-    }
-    
-    
-    
+@media only screen and (min-width: 700px) {
+  [class*="col-"] {
+    width: 8.33%;
+  }
+  #uvaMapArt {
+    width: 500px;
+  }
 }
 
+.all {
+  /* border-style: solid;
+    border-color: black; */
+  padding: 0.5%;
+  margin-top: 1%;
+  margin: 1%;
+  display: flex;
+  flex-direction: row;
+  text-align: center;
+  align-items: center;
 
-.all{
-    border-style: solid;
-    border-color: black;
-    padding: .5%;
-    margin-top: 1%;
-    margin:1%;
-    display: flex;
-    flex-direction: row;
-    text-align: center;
-    align-items: center;
-    
-    background-color: white; 
-    position: sticky;
-    top: 0;
-    z-index: 20;
-    
+  background-color: white;
+  position: sticky;
+  top: 0;
+  z-index: 20;
 }
 
-.headerDiv a{
+.headerDiv a {
   float: center;
   color: black;
   text-align: center;
@@ -85,20 +88,20 @@ footer, header, hgroup, menu, nav, section {
 }
 
 .test {
-    padding-left:35%;
+  padding-left: 35%;
 }
 
-.randomMoveButton{
-   display: flex;
-   justify-content: center;
-   align-items: center;
-   margin-top: 2%;
-   margin-bottom: 2%;
+.randomMoveButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2%;
+  margin-bottom: 2%;
 }
 
-.randomMoveButton button{
-    position: absolute;
-    color: black;
-    background-color: white;
-    padding: 1%;
+.randomMoveButton button {
+  position: absolute;
+  color: black;
+  background-color: white;
+  padding: 1%;
 }
