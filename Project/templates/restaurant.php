@@ -30,14 +30,14 @@
       <header>
         <nav>
           <div class="all">
-            <a id="uvaMovesHeader" href="index.html">UVA MOVES</a>
+            <a id="uvaMovesHeader" href="?command=homepage">UVA MOVES</a>
             <div class="test">
-              <a href="Restaurant.html"> Restaurants </a> |
-              <a href="Activities.html"> Activities </a> |
-              <a href="Review.html"> Review </a> |
-              <a href="What.html"> What Should I do? </a> |
+              <a href="?command=restaurant"> Restaurants </a> |
+              <a href="?command=activities"> Activities </a> |
+              <a href="?command=review"> Review </a> |
+              <a href="?command=what"> What Should I do? </a> |
               <!-- NEED TO MAKE A PIC LATER  -->
-              <a href="Profile.html">Profile</a>
+              <a href="?command=profile">Profile</a>
               <!-- search bar -->
               <input type="text" placeholder="Search Here" />
             </div>
@@ -47,7 +47,7 @@
     </div>
 
     <div class="Post">
-      <form action="./post.php" method="post">
+      <form action="?command=restaurant" method="post">
         <label>Restaurant Name:</label>
         <input type="text" name="rname" autofocus /> <br />
         <label>Review:</label>
