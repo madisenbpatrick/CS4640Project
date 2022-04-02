@@ -46,15 +46,14 @@
       </header>
     </div>
 
-    <div class="Post">
-      <form action="?command=restaurant" method="post">
-        <label>Restaurant Name:</label>
-        <input type="text" name="rname" autofocus /> <br />
-        <label>Review:</label>
-        <!-- <input type="text" name="review"/> <br/> -->
-        <textarea rows="5" cols="40" name="review"></textarea> <br />
-        <input type="submit" value="Submit" />
-      </form>
+    <div>
+    <form action="?command=login" method="post">
+    <div class="text-center">                
+            <button type="submit" class="btn btn-primary"> Write a Review </button>
+            </div>
+    </div>
+
+    
     </div>
 
     <script

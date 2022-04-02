@@ -45,6 +45,43 @@
       </header>
     </div>
 
+    </form>
+    <div class="Post">
+        <form action="?command=restaurant" method="post">
+            <div class="mb-3">
+                <label for="r_name" class="form-label">Name of Place</label>
+                <input type="text" class="form-control" id="r_name" name="r_name" autofocus/>
+            </div>
+            
+            <div class="mb-3">
+                <label for="review" class="form-label">Review</label>
+                <input type="text" class="form-control" id="review" name="review"/>
+            </div>
+
+            <div class="mb-3">
+                <label for="rating" class="form-label">Rating</label>
+                <select name = "rating" id="rating">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="category" class="form-label">Category</label>
+                <select name ="category" id="category">
+                    <option value="r_restaurant">Restaurant</option>
+                    <option value="r_activities">Activity</option>
+                </select>
+            </div>
+
+            <div class="text-center">                
+            <button type="submit" class="btn btn-primary"> Submit </button>
+            </div>
+        </form>
+
     <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
