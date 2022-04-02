@@ -58,7 +58,7 @@ class UvaMoves{
             // if login go straight to review page 
             header("Location: ?command=review");
         }
-        if (isset($_POST["email"])) {
+        if (isset($_POST["email"]) && ($_POST["email"] != "") && $_POST["password"] != "") {
 
             $data = $this->db->query("select * from uvaMoves_users where email = ?;", "s", $_POST["email"]);
             if ($data === false) {
@@ -166,6 +166,7 @@ class UvaMoves{
     }
 
     private function review(){
+
         $user = [
             "name" => $_COOKIE["name"],
             "email" => $_COOKIE["email"],
@@ -186,6 +187,9 @@ class UvaMoves{
 
             return;
             
+        }
+        else{
+            $error_msg = "Error inserting user";
         }
 
         include("templates/review.php");
