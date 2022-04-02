@@ -123,7 +123,30 @@ class UvaMoves{
     }
 
     private function activities(){
+        $uvaMoves_actReviews = $this->loadActReviews();
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+        ];
+
         include("templates/activities.php");
+    }
+
+    private function loadActReviews(){
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+        ];
+
+        $data = $this->db->query("select * from uvaMoves_reviews where category = ? order by rand();","s","r_activities");
+
+        if(!isset ($data[0])){
+            die("No reviews in the database");
+        }
+        
+        return $data;
     }
 
     private function profile(){
@@ -184,7 +207,7 @@ class UvaMoves{
         $data = $this->db->query("select * from uvaMoves_reviews where category = ? order by rand();","s","r_restaurant");
 
         if(!isset ($data[0])){
-            die("No questions in the database");
+            die("No Reviews in the database");
         }
         
         return $data;

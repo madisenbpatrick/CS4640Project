@@ -23,6 +23,15 @@
       type="text/css"
       href="styles/indexstyles.less"
     />
+    <style>
+      .allActReviews{
+        display:flex;
+        flex-direction: column;
+        margin-top:5%;
+        align-items: center;
+      }
+      
+    </style>
   </head>
   <body>
     <div class="headerDiv">
@@ -35,9 +44,7 @@
               <a href="?command=activities"> Activities </a> |
               <a href="?command=review"> Review </a> |
               <a href="?command=what"> What Should I do? </a> |
-              <!-- NEED TO MAKE A PIC LATER  -->
               <a href="?command=profile">Profile</a>
-              <!-- search bar -->
               <input type="text" placeholder="Search Here" />
             </div>
           </div>
@@ -45,6 +52,54 @@
       </header>
     </div>
 
+    <div>
+    <form action="?command=login" method="post">
+    <div class="text-center">                
+            <button type="submit" class="btn btn-primary"> Write a Review </button>
+            </div>
+    </div>
+
+    <section class = "allActReviews">
+    <h4>Activity Reviews</h4>
+    <div class="col col-md-6 col-sm-auto right">
+    <div class="row">
+    <?php
+    if(is_array($uvaMoves_actReviews)){
+      $sn=1;
+      foreach($uvaMoves_actReviews as $i){
+        ?>
+              <div class="card text-center">
+                <div class="card-header"> <?php echo $i["r_name"]??'';?></div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-sm">
+                      <thead>
+                        <th scope="col">Review</th>
+                        <th scope="col">Rating</th>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td><?php echo $i["review"]??'';?></td>
+                          <td><?php echo $i["rating"]??'';?></td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                <?php 
+      $sn++;}} 
+    else{?>
+      <tr>
+      <td> <?php echo $uvaMoves_reviews; ?>
+      </td>
+
+      <tr>
+      <?php
+    }?>
+    </div>
+    </div>
+
+  </section>
     <script
     src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"

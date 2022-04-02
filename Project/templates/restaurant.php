@@ -45,9 +45,7 @@
               <a href="?command=activities"> Activities </a> |
               <a href="?command=review"> Review </a> |
               <a href="?command=what"> What Should I do? </a> |
-              <!-- NEED TO MAKE A PIC LATER  -->
               <a href="?command=profile">Profile</a>
-              <!-- search bar -->
               <input type="text" placeholder="Search Here" />
             </div>
           </div>
