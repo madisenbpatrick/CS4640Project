@@ -155,6 +155,10 @@ class UvaMoves{
     }
 
     private function profile(){
+        if(!isset($_SESSION['login'])){ //if login in session is not set
+            header("Location: ?command=login");
+        }
+
         include("templates/profile.php");
     }
     private function yourReviews(){
