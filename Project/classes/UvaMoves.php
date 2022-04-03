@@ -249,11 +249,17 @@ class UvaMoves{
 
     private function review(){
 
+        if(!isset($_SESSION['login'])){ //if login in session is not set
+            header("Location: ?command=login");
+        }
+
         $user = [
             "name" => $_COOKIE["name"],
             "email" => $_COOKIE["email"],
             "id" => $_COOKIE["id"],
         ];
+
+
 
         if(!empty($_POST["r_name"]) && !empty($_POST["review"])){
             $insert =$this->db->query("insert into uvaMoves_reviews (user_id, category, r_name, review, rating)
