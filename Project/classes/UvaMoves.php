@@ -59,10 +59,20 @@ class UvaMoves{
             // they need to see the login
             $command = "login";
         }
+
         else {
-            // if login go straight to review page 
-            header("Location: ?command=review");
+            // if login go straight to page 
+            $user = [
+                "name" => $_COOKIE["name"],
+                "email" => $_COOKIE["email"],
+                "id" => $_COOKIE["id"],
+                "url" => $_COOKIE["url"],
+            ];
+            $url = $user["url"];
+            header('Location: ?command='. $url);
+            //header("Location: ?command=review");
         }
+
         if (isset($_POST["email"]) && ($_POST["email"] != "") && $_POST["password"] != "") {
 
             $data = $this->db->query("select * from uvaMoves_users where email = ?;", "s", $_POST["email"]);
@@ -78,13 +88,18 @@ class UvaMoves{
                         "name" => $_COOKIE["name"],
                         "email" => $_COOKIE["email"],
                         "id" => $_COOKIE["id"],
+                        "url" => $_COOKIE["url"],
                     ];
 
                     $_SESSION['name'] = $data[0]["name"];
                     $_SESSION['email'] = $data[0]["email"];
                     $_SESSION['id'] = $data[0]["id"];
 
-                    header("Location: ?command=review");
+                    // header('Location: ' . $_SERVER['HTTP_REFERER']);
+                        // set a cookie for the last command 
+                    $url = $user["url"];
+                    header('Location: ?command='. $url);
+                    //header("Location: ?command=review");
                 } else {
                     $error_msg = "Wrong password";
                 }
@@ -99,10 +114,21 @@ class UvaMoves{
                     setcookie("name", $_POST["name"], time() + 3600);
                     setcookie("email", $_POST["email"], time() + 3600);
                     setcookie("id",$data2[0]["id"],time()+3600);
+
+                    $user = [
+                        "name" => $_COOKIE["name"],
+                        "email" => $_COOKIE["email"],
+                        "id" => $_COOKIE["id"],
+                        "url" => $_COOKIE["url"],
+                    ];
+
                     $_SESSION['name'] = $_POST["name"];
                     $_SESSION['email'] = $_POST["email"];
                     $_SESSION['id'] = $data2[0]["id"];
-                    header("Location: ?command=review");
+
+                    $url = $user["url"];
+                    header('Location: ?command='. $url);
+                    //header("Location: ?command=review");
                 }
             }
         }
@@ -117,17 +143,25 @@ class UvaMoves{
         unset($_SESSION['email']);
         setcookie("id",0,time()-3600);
         unset($_SESSION["id"]);
+        setcookie("url","",time()-3600);
+        unset($_SESSION['url']);
         session_destroy();
         //echo "Hi " . $_COOKIE["name"];
     }
     
 
     private function homepage(){
+        setcookie("url", "homepage", time() + 3600);
+        $_SESSION['url'] = 'homepage';
+
         include("templates/homepage.php");
 
     }
 
     private function activities(){
+        setcookie("url", "review", time() + 3600);
+        $_SESSION['url'] = 'review';
+
         $uvaMoves_actReviews = $this->loadActReviews();
         $user = [
             "name" => $_COOKIE["name"],
@@ -155,7 +189,10 @@ class UvaMoves{
     }
 
     private function profile(){
-        if(!isset($_SESSION['login'])){ //if login in session is not set
+        setcookie("url", "profile", time() + 3600);
+        $_SESSION['url'] = 'profile';
+
+        if(!isset($_SESSION['email'])){ //if login in session is not set
             header("Location: ?command=login");
         }
 
@@ -168,6 +205,7 @@ class UvaMoves{
             "name" => $_COOKIE["name"],
             "email" => $_COOKIE["email"],
             "id" => $_COOKIE["id"],
+
         ];
 
         include("templates/yourReviews.php");
@@ -224,11 +262,15 @@ class UvaMoves{
     }
 
     private function restaurant(){
+        setcookie("url", "review", time() + 3600);
+        $_SESSION['url'] = 'review';
+        
         $uvaMoves_restReviews = $this->loadRestReviews();
         $user = [
             "name" => $_COOKIE["name"],
             "email" => $_COOKIE["email"],
             "id" => $_COOKIE["id"],
+            "url" => $_COOKIE["url"],
         ];
 
         include("templates/restaurant.php");
@@ -252,8 +294,10 @@ class UvaMoves{
     }
 
     private function review(){
+        setcookie("url", "review", time() + 3600);
+        $_SESSION['url'] = 'review';
 
-        if(!isset($_SESSION['login'])){ //if login in session is not set
+        if(!isset($_SESSION['email'])){ //if login in session is not set
             header("Location: ?command=login");
         }
 
