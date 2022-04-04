@@ -53,7 +53,7 @@
         alt="uvaMapArt"
         id="uvaMapArt"
       />
-      <button>Random Move</button>
+      <button><a href="?command=what"> Random Move </a></button>
     </div>
 
     <!-- a bunch of restaurants/ activities -->
