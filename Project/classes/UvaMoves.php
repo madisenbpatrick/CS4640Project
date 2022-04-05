@@ -60,10 +60,20 @@ class UvaMoves{
             // they need to see the login
             $command = "login";
         }
+
         else {
-            // if login go straight to review page 
-            header("Location: ?command=review");
+            // if login go straight to page 
+            $user = [
+                "name" => $_COOKIE["name"],
+                "email" => $_COOKIE["email"],
+                "id" => $_COOKIE["id"],
+                "url" => $_COOKIE["url"],
+            ];
+            $url = $user["url"];
+            header('Location: ?command='. $url);
+            //header("Location: ?command=review");
         }
+
         if (isset($_POST["email"]) && ($_POST["email"] != "") && $_POST["password"] != "") {
 
             $data = $this->db->query("select * from uvaMoves_users where email = ?;", "s", $_POST["email"]);
@@ -79,13 +89,18 @@ class UvaMoves{
                         "name" => $_COOKIE["name"],
                         "email" => $_COOKIE["email"],
                         "id" => $_COOKIE["id"],
+                        "url" => $_COOKIE["url"],
                     ];
 
                     $_SESSION['name'] = $data[0]["name"];
                     $_SESSION['email'] = $data[0]["email"];
                     $_SESSION['id'] = $data[0]["id"];
 
-                    header("Location: ?command=review");
+                    // header('Location: ' . $_SERVER['HTTP_REFERER']);
+                        // set a cookie for the last command 
+                    $url = $user["url"];
+                    header('Location: ?command='. $url);
+                    //header("Location: ?command=review");
                 } else {
                     $error_msg = "Wrong password";
                 }
@@ -100,10 +115,21 @@ class UvaMoves{
                     setcookie("name", $_POST["name"], time() + 3600);
                     setcookie("email", $_POST["email"], time() + 3600);
                     setcookie("id",$data2[0]["id"],time()+3600);
+
+                    $user = [
+                        "name" => $_COOKIE["name"],
+                        "email" => $_COOKIE["email"],
+                        "id" => $_COOKIE["id"],
+                        "url" => $_COOKIE["url"],
+                    ];
+
                     $_SESSION['name'] = $_POST["name"];
                     $_SESSION['email'] = $_POST["email"];
                     $_SESSION['id'] = $data2[0]["id"];
-                    header("Location: ?command=review");
+
+                    $url = $user["url"];
+                    header('Location: ?command='. $url);
+                    //header("Location: ?command=review");
                 }
             }
         }
@@ -118,19 +144,22 @@ class UvaMoves{
         unset($_SESSION['email']);
         setcookie("id",0,time()-3600);
         unset($_SESSION["id"]);
+        setcookie("url","",time()-3600);
+        unset($_SESSION['url']);
         session_destroy();
         //echo "Hi " . $_COOKIE["name"];
     }
     
 
     private function homepage(){
-        //get a most recent reviewd restaurant/activity, display on home page
-        // $most_recent = $this->db->query("select * from uvaMoves_reviews order by review_date desc limit 1");
         include("templates/homepage.php");
 
     }
 
     private function activities(){
+        setcookie("url", "review", time() + 3600);
+        $_SESSION['url'] = 'review';
+
         $uvaMoves_actReviews = $this->loadActReviews();
         $user = [
             "name" => $_COOKIE["name"],
@@ -158,6 +187,13 @@ class UvaMoves{
     }
 
     private function profile(){
+        setcookie("url", "profile", time() + 3600);
+        $_SESSION['url'] = 'profile';
+
+        if(!isset($_SESSION['email'])){ //if login in session is not set
+            header("Location: ?command=login");
+        }
+
         include("templates/profile.php");
     }
     private function yourReviews(){
@@ -167,6 +203,7 @@ class UvaMoves{
             "name" => $_COOKIE["name"],
             "email" => $_COOKIE["email"],
             "id" => $_COOKIE["id"],
+
         ];
         
         include("templates/yourReviews.php");
@@ -239,11 +276,15 @@ class UvaMoves{
     }
 
     private function restaurant(){
+        setcookie("url", "review", time() + 3600);
+        $_SESSION['url'] = 'review';
+        
         $uvaMoves_restReviews = $this->loadRestReviews();
         $user = [
             "name" => $_COOKIE["name"],
             "email" => $_COOKIE["email"],
             "id" => $_COOKIE["id"],
+            "url" => $_COOKIE["url"],
         ];
 
         include("templates/restaurant.php");
@@ -267,12 +308,20 @@ class UvaMoves{
     }
 
     private function review(){
+        setcookie("url", "review", time() + 3600);
+        $_SESSION['url'] = 'review';
+
+        if(!isset($_SESSION['email'])){ //if login in session is not set
+            header("Location: ?command=login");
+        }
 
         $user = [
             "name" => $_COOKIE["name"],
             "email" => $_COOKIE["email"],
             "id" => $_COOKIE["id"],
         ];
+
+
 
         if(!empty($_POST["r_name"]) && !empty($_POST["review"])){
             $insert =$this->db->query("insert into uvaMoves_reviews (user_id, category, r_name, review, rating)
@@ -297,8 +346,38 @@ class UvaMoves{
     }
 
     private function what(){
+        $uvaMoves_whatReview = $this->loadWhat();
+
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+        ];
+
+        // $data = $this->db->query("select * from uvaMoves_reviews where category = ? order by rand();","s","r_restaurant");
+
         include("templates/what.php");
     }
 
+    private function loadWhat(){
+
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+        ];
+
+        // $data = $this->db->query("select * from uvaMoves_reviews where category = ? order by rand();","s","r_restaurant");
+
+        $data = $this->db->query("select * from uvaMoves_reviews order by rand() limit 1;");
+
+        if (!isset($data[0])) {
+            die("No questions in the database");
+        }
+        //$question = $data[0];
+        return $data;
+        
+    }
 
 }
+
