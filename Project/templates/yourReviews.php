@@ -80,7 +80,6 @@
     if(is_array($uvaMoves_reviews)){
       $sn=1;
       foreach($uvaMoves_reviews as $i){
-        $id = $i["id"];
         ?>
               <div class="card text-center">
                 <div class="card-header"> <?php echo $i["r_name"]??'';?></div>
@@ -98,14 +97,9 @@
                         </tr>
                       </tbody>
                     </table>
-                    <!-- this part needs to use get request to pass param reviewID -->
-
-                    <!-- <form action="?command=editReview" method="post">
+                    <form action="?command=editReview" method="post">
                       <button type="submit" class="btn btn-primary"> Edit </button>
                       <button type="submit" class="btn btn-primary"> Delete </button>
-                    </form> -->
-                    <button class="btn btn-primary" onclick="editReview('<?php echo $id?>')"> Edit </button>
-                    <button class="btn btn-primary" onclick="deleteReview('<?php echo $id?>')"> Delete </button>
                   </div>
                 </div>
                 <?php 
@@ -122,17 +116,5 @@
     </div>
 
   </section>
-  <script>
-    function editReview(reviewID){
-      var x = new XMLHttpRequest();
-            x.open("GET", "?command=edit?reviewID="+reviewID, true);
-            x.send();          
-    }
-    function deleteReview(reviewID){
-      var x = new XMLHttpRequest();
-            x.open("GET", "?command=deleteReview?reviewID="+reviewID, true);
-            x.send();          
-    }
-  </script>
   </body>
 </html>

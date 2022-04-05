@@ -36,7 +36,6 @@ class UvaMoves{
                 $this->editReview();
                 break;
             case "deleteReview":
-                $this->deleteReview();
                 break;
             case "yourFavorites":
                 $this->yourFavorites();
@@ -152,6 +151,9 @@ class UvaMoves{
     
 
     private function homepage(){
+        setcookie("url", "homepage", time() + 3600);
+        $_SESSION['url'] = 'homepage';
+
         include("templates/homepage.php");
 
     }
@@ -198,47 +200,41 @@ class UvaMoves{
     }
     private function yourReviews(){
         $uvaMoves_reviews = $this-> loadYourReviews();
-        
+
         $user = [
             "name" => $_COOKIE["name"],
             "email" => $_COOKIE["email"],
             "id" => $_COOKIE["id"],
 
         ];
-        
+
         include("templates/yourReviews.php");
     }
-    
-    private function loadYourReviews($reviewID = ""){
+
+    private function loadYourReviews(){
         $user = [
             "name" => $_COOKIE["name"],
             "email" => $_COOKIE["email"],
             "id" => $_COOKIE["id"],
         ];
-        if (empty($reviewID)){
-            $data = $this->db->query("select * from uvaMoves_reviews where user_id = ? limit 10;",
-            "i", $user["id"]);
-        } else {
-            $data = $this->db->query("select * from uvaMoves_reviews where user_id = ? and id = ?;",
-            "ii", $user["id"], $reviewID);
-        }
+
+        $data = $this->db->query("select * from uvaMoves_reviews where user_id = ?;",
+                                 "i", $user["id"]);
         
         if(!isset($data[0])){
             $error_msg = "No Reviews yet";
         } 
         return $data;                       
     }
-    
+
     private function editReview(){
-        
-        $uvaMoves_reviews = $this-> loadYourReviews();
+
         $user = [
             "name" => $_COOKIE["name"],
             "email" => $_COOKIE["email"],
             "id" => $_COOKIE["id"],
-            
         ];
-        // user submits edited review
+
         if(!empty($_POST["r_name"]) && !empty($_POST["review"])){
             $insert =$this->db->query("insert into uvaMoves_reviews (user_id, category, r_name, review, rating)
                                     values (?,?,?,?,?);","isssi",$user["id"],$_POST["category"],$_POST["r_name"],
@@ -254,21 +250,11 @@ class UvaMoves{
             return;
             
         }
-        // user clicks edit button
-        if (isset($_GET["reviewID"])){
-            $review = $this->loadYourReviews($_GET["reviewID"]);
-            include("templates/editReview.php");
+        else{
+            $error_msg = "Error inserting user";
         }
 
-    }
-    function deleteReview(){
-        if (isset($_GET["reviewID"])){
-            $query = $this->db->query("delete from uvaMoves_reviews where id = ?", "i", $_GET["reviewID"]);
-            if (!$query){
-                die("Error Deleting review");
-            }
-        }
-        header("Location: ?command=yourReviews");
+        include("templates/editReview.php");
     }
 
     private function yourFavorites(){
