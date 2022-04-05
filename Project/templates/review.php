@@ -53,6 +53,7 @@
         padding-left: 0%;
       }
     }
+
   </style>
 
 </head>
@@ -79,8 +80,8 @@
   </div>
 
 
-  </form>
-  <div class="Post">
+  <div class="container" style="margin-top: 15px;"">
+    <div><h2>Write a Review Below</h2></div>
     <form action="?command=review" method="post">
       <div class="mb-3">
         <label for="r_name" class="form-label">Name of Place</label>
