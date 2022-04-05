@@ -51,30 +51,36 @@
         <form action="?command=review" method="post">
             <div class="mb-3">
                 <label for="r_name" class="form-label">Name of Place</label>
-                <input type="text" class="form-control" id="r_name" name="r_name" autofocus/>
+                <input type="text" class="form-control" id="r_name" name="r_name" value=<?=$review["r_name"]?> autofocus/>
             </div>
             
             <div class="mb-3">
                 <label for="review" class="form-label">Review</label>
-                <input type="text" class="form-control" id="review" name="review"/>
+                <input type="text" class="form-control" id="review" name="review" value=<?=$review["review"]?>/>
             </div>
 
             <div class="mb-3">
                 <label for="rating" class="form-label">Rating</label>
                 <select name = "rating" id="rating">
-                    <option value=1>1</option>
-                    <option value=2>2</option>
-                    <option value=3>3</option>
-                    <option value=4>4</option>
-                    <option value=5>5</option>
+                    <?php 
+                    for ($i = 1; $i< 6; $i++){
+                      echo "<option value=".$i." ".($i == $review["rating"]? "selected": "").">".$i."</option>";
+                    }
+                    ?>
                 </select>
             </div>
 
             <div class="mb-3">
                 <label for="category" class="form-label">Category</label>
                 <select name ="category" id="category">
-                    <option value="r_restaurant">Restaurant</option>
-                    <option value="r_activities">Activity</option>
+                    <?php 
+                      $arr = ["Restaurant"=>"r_restaurant", "Activity" => "r_activities"];
+                     foreach ($arr as $key => $type) {
+                       echo "<option value=".$type." ".($type == $review["category"]? "selected": "").">".$key."</option>";
+                     }
+                    ?>
+                    <!-- <option value="r_restaurant">Restaurant</option>
+                    <option value="r_activities">Activity</option> -->
                 </select>
             </div>
 
