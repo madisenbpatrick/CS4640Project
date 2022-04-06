@@ -396,10 +396,13 @@ class UvaMoves{
         // echo result from db
         $restaurants = $this->db->query("select r_cor from restaurants where r_name = ?", "s", "villa diner");
         // $restaurants = json_encode(["lat" => 38.054405898608515, "lng" => -78.49734770169421])
+        // header('Content-type:application/json;charset=utf-8');
+        // $cor = explode(",",$restaurants[0]["r_cor"]);
+        // echo json_encode($cor, JSON_UNESCAPED_UNICODE);
         header('Content-type:application/json;charset=utf-8');
-        $cor = explode(",",$restaurants[0]["r_cor"]);
+        $cor = ['38.054405898608515', '-78.49734770169421'];
         echo json_encode($cor, JSON_UNESCAPED_UNICODE);
-        return json_encode($restaurants, JSON_UNESCAPED_UNICODE);
+        return;
     }
 }
 
