@@ -22,7 +22,7 @@
     <link
       rel="stylesheet/less"
       type="text/css"
-      href="styles/indexstyles.less"
+      href="./styles/review.less"
     />
     <style>
       .allYourReviews{
@@ -91,9 +91,9 @@
                         <th scope="col">Review</th>
                         <th scope="col">Rating</th>
                       </thead>
-                      <tbody>
+                      <tbody class="reviewContent">
                         <tr>
-                          <td><?php echo $i["review"]??'';?></td>
+                          <td ><?php echo $i["review"]??'';?></td>
                           <td><?php echo $i["rating"]??'';?></td>
                         </tr>
                       </tbody>
@@ -124,14 +124,12 @@
   </section>
   <script>
     function editReview(reviewID){
-      var x = new XMLHttpRequest();
-            x.open("GET", "?command=edit?reviewID="+reviewID, true);
-            x.send();          
+      location.href = "?command=editReview&reviewID="+ reviewID;      
     }
     function deleteReview(reviewID){
       var x = new XMLHttpRequest();
-            x.open("GET", "?command=deleteReview?reviewID="+reviewID, true);
-            x.send();          
+      x.open("GET", "?command=deleteReview&reviewID="+reviewID, true);
+      x.send();          
     }
   </script>
   </body>

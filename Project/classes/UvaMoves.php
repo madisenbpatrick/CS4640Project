@@ -50,6 +50,9 @@ class UvaMoves{
             case "what":
                 $this->what();
                 break;
+            case "searchMap":
+                $this->searchMap();
+                break;
             // default: 
             //     $this->homepage();
         }
@@ -209,7 +212,7 @@ class UvaMoves{
         include("templates/yourReviews.php");
     }
     
-    private function loadYourReviews($reviewID = ""){
+    private function loadYourReviews($reviewID = null){
         $user = [
             "name" => $_COOKIE["name"],
             "email" => $_COOKIE["email"],
@@ -236,16 +239,23 @@ class UvaMoves{
             "name" => $_COOKIE["name"],
             "email" => $_COOKIE["email"],
             "id" => $_COOKIE["id"],
-            
         ];
-        // user submits edited review
+        // user submits edited review, post request
         if(!empty($_POST["r_name"]) && !empty($_POST["review"])){
-            $insert =$this->db->query("insert into uvaMoves_reviews (user_id, category, r_name, review, rating)
-                                    values (?,?,?,?,?);","isssi",$user["id"],$_POST["category"],$_POST["r_name"],
-                                    $_POST["review"], $_POST["rating"]);
+            if (!empty($_POST["reviewID"])){
+                $q = $this->db->query("update uvaMoves_reviews set category = ?, r_name = ?, review = ?, rating = ?
+                                    where user_id = ? and id = ?;","sssiii", $_POST["category"],$_POST["r_name"],
+                                    $_POST["review"], $_POST["rating"], $user["id"], $_POST["reviewID"]);
+            } else {
+
+                $q =$this->db->query("insert into uvaMoves_reviews (user_id, category, r_name, review, rating)
+                                        values (?,?,?,?,?);","isssi",$user["id"],$_POST["category"],$_POST["r_name"],
+                                        $_POST["review"], $_POST["rating"]);
+            }
+
             
-            if ($insert === false) {
-                $error_msg = "Error inserting user";
+            if ($q === false) {
+                $error_msg = "Error in managing database";
             }
             else{
                 header("Location: ?command=yourReviews");
@@ -254,7 +264,7 @@ class UvaMoves{
             return;
             
         }
-        // user clicks edit button
+        // user clicks edit button, get request
         if (isset($_GET["reviewID"])){
             $review = $this->loadYourReviews($_GET["reviewID"]);
             include("templates/editReview.php");
@@ -379,5 +389,17 @@ class UvaMoves{
         
     }
 
+    public function searchMap(){
+        //do a google search by name
+        //result returned in json
+        //need api key, so hide in server
+        // echo result from db
+        $restaurants = $this->db->query("select r_cor from restaurants where r_name = ?", "s", "villa diner");
+        // $restaurants = json_encode(["lat" => 38.054405898608515, "lng" => -78.49734770169421])
+        header('Content-type:application/json;charset=utf-8');
+        $cor = explode(",",$restaurants[0]["r_cor"]);
+        echo json_encode($cor, JSON_UNESCAPED_UNICODE);
+        return json_encode($restaurants, JSON_UNESCAPED_UNICODE);
+    }
 }
 

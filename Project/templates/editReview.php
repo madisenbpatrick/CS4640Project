@@ -45,18 +45,22 @@
         </nav>
       </header>
     </div>
-
+    <div>
+      <?php 
+      var_dump($review[0]["id"]);
+      ?>
+    </div>
     </form>
     <div class="Post">
-        <form action="?command=review" method="post">
+        <form action="?command=editReview" method="post">
             <div class="mb-3">
                 <label for="r_name" class="form-label">Name of Place</label>
-                <input type="text" class="form-control" id="r_name" name="r_name" value=<?=$review["r_name"]?> autofocus/>
+                <input type="text" class="form-control" id="r_name" name="r_name" value="<?php echo $review[0]["r_name"]?>" autofocus />
             </div>
             
             <div class="mb-3">
                 <label for="review" class="form-label">Review</label>
-                <input type="text" class="form-control" id="review" name="review" value=<?=$review["review"]?>/>
+                <input type="text" class="form-control" id="review" name="review" value="<?php echo $review[0]["review"]?>" />
             </div>
 
             <div class="mb-3">
@@ -64,7 +68,7 @@
                 <select name = "rating" id="rating">
                     <?php 
                     for ($i = 1; $i< 6; $i++){
-                      echo "<option value=".$i." ".($i == $review["rating"]? "selected": "").">".$i."</option>";
+                      echo "<option value=".$i." ".($i == $review[0]["rating"]? "selected": "").">".$i."</option>";
                     }
                     ?>
                 </select>
@@ -76,14 +80,14 @@
                     <?php 
                       $arr = ["Restaurant"=>"r_restaurant", "Activity" => "r_activities"];
                      foreach ($arr as $key => $type) {
-                       echo "<option value=".$type." ".($type == $review["category"]? "selected": "").">".$key."</option>";
+                       echo "<option value=".$type." ".($type == $review[0]["category"] ? "selected": "").">".$key."</option>";
                      }
                     ?>
                     <!-- <option value="r_restaurant">Restaurant</option>
                     <option value="r_activities">Activity</option> -->
                 </select>
             </div>
-
+            <input type=hidden name=reviewID id=reviewID value="<?php echo $review[0]["id"]?>" />
             <div class="text-center">                
             <button type="submit" class="btn btn-primary"> Submit </button>
             </div>
