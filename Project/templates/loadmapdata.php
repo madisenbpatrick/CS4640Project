@@ -127,27 +127,13 @@
     <script src="https://cdn.jsdelivr.net/npm/less@4.1.1"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        let cor;
-        var x = new XMLHttpRequest();
-        x.onreadystatechange = function(){
-          if (this.readyState == 4 && this.status == 200) {
-            cor = JSON.parse(this.responseText);
-            console.log(cor);
-            initMap();
-        }
-        }
-        x.open("GET", "?command=searchMap", true);
-        x.send();
-
-
-      function initMap() {
-        // The location of villa
-        // const villa = { lat: 38.054405898608515, lng: -78.49734770169421 };
-        villa = {lat: Number(cor[0]), lng: Number(cor[1])}
+        function initMap() {
+        // The location of Uluru
+        const villa = { lat: 38.054405898608515, lng: -78.49734770169421 };
         // The map, centered at Uluru
         const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 15,
-          center: villa
+          zoom: 10,
+          center: villa,
         });
         // The marker, positioned at Uluru
         const marker = new google.maps.Marker({
@@ -155,10 +141,26 @@
           map: map,
         });
       }
+        // var config = {
+        //     method : 'get',
+        //     url : 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=38.054405898608515%2C-78.49734770169421&radius=1500&type=restaurant&keyword=villa&key=AIzaSyBJKHyxTsg6-mlXDK-ahlEv7bSziy63oCY',
+        //     headers: {"Access-Control-Allow-Origin": "*"}
+        // };
+        // axios(config)
+        // .then(function (response) {
+        // console.log(JSON.stringify(response.data));
+        // })
+        // .catch(function (error) {
+        // console.log(error);
+        // });
+    
     </script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJKHyxTsg6-mlXDK-ahlEv7bSziy63oCY&callback=initMap">
     </script>
   </body>
 </html>
+
+
