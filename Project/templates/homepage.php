@@ -23,6 +23,45 @@
       type="text/css"
       href="styles/indexstyles.less"
     />
+    <style>
+    @media only screen and (max-width: 1200px) {
+      [class*="col-"] {
+        width: 100%;
+      }
+
+      #uvaMapArt {
+        width: 200px;
+      }
+
+      .headerDiv {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .all {
+        padding: 0%;
+        margin-top: 0%;
+        margin: 0%;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .headerDiv a {
+        display: flex;
+        flex-direction: column;
+      }
+
+      #uvaMovesHeader {
+        font-size: 30px;
+      }
+
+      .test {
+        padding-left: 0%;
+      }
+    }
+  </style>
   </head>
 
   <body>
@@ -33,10 +72,10 @@
             <!-- need to fix it -->
             <a id="uvaMovesHeader" href="?command=homepage">UVA MOVES</a>
             <div class="test">
-              <a href="?command=restaurant"> Restaurants </a> |
-              <a href="?command=activities"> Activities </a> |
-              <a href="?command=review"> Review </a> |
-              <a href="?command=what"> What Should I do? </a> |
+              <a href="?command=restaurant"> Restaurants </a> 
+              <a href="?command=activities"> Activities </a> 
+              <a href="?command=review"> Review </a> 
+              <a href="?command=what"> What Should I do? </a> 
               <!-- NEED TO MAKE A PIC LATER  -->
               <a href="?command=profile">Profile</a>
               <a href="?command=logout">Logout</a>
