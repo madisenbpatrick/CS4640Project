@@ -127,9 +127,7 @@
       location.href = "?command=editReview&reviewID="+ reviewID;      
     }
     function deleteReview(reviewID){
-      var x = new XMLHttpRequest();
-      x.open("GET", "?command=deleteReview&reviewID="+reviewID, true);
-      x.send();          
+      location.href = "?command=deleteReview&reviewID="+reviewID;
     }
   </script>
   </body>
