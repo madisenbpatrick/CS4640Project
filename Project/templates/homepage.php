@@ -39,6 +39,7 @@
               <a href="?command=what"> What Should I do? </a> |
               <!-- NEED TO MAKE A PIC LATER  -->
               <a href="?command=profile">Profile</a>
+              <a href="?command=logout">Logout</a>
               <!-- search bar -->
               <input type="text" placeholder="Search Here" />
             </div>
@@ -132,7 +133,6 @@
         x.onreadystatechange = function(){
           if (this.readyState == 4 && this.status == 200) {
             cor = JSON.parse(this.responseText);
-            console.log(cor);
             initMap();
         }
         }

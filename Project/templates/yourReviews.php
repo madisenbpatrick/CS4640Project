@@ -46,6 +46,7 @@
               <a href="?command=review"> Review </a> |
               <a href="?command=what"> What Should I do? </a> |
               <a href="?command=profile">Profile</a>
+              <a href="?command=logout">Logout</a>
               <input type="text" placeholder="Search Here" />
             </div>
           </div>

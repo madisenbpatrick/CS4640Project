@@ -11,27 +11,25 @@
   <meta name="description" content="Home page for UVA moves" />
   <meta name="keywords" content="define keywords for search engines" />
   <title>UVA MOVES</title>
+  </head>
+  <body>
+    <div class="headerDiv">
+      <header>
+        <nav>
+          <div class="all">
+            <a id="uvaMovesHeader" href="?command=homepage">UVA MOVES</a>
+            <div class="test">
+              <a href="?command=restaurant"> Restaurants </a> |
+              <a href="?command=activities"> Activities </a> |
+              <a href="?command=review"> Review </a> |
+              <a href="?command=what"> What Should I do? </a> |
+              <!-- NEED TO MAKE A PIC LATER  -->
+              <a href="?command=profile">Profile</a>
+              <a href="?command=logout">Logout</a>
+              <!-- search bar -->
+              <input type="text" placeholder="Search Here" />
+            </div>
 
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.css" rel="stylesheet" />
-  <link rel="stylesheet/less" type="text/css" href="styles/indexstyles.less" />
-
-</head>
-
-<body>
-  <div class="headerDiv">
-    <header>
-      <nav>
-        <div class="all">
-          <a id="uvaMovesHeader" href="?command=homepage">UVA MOVES</a>
-          <div class="test">
-            <a href="?command=restaurant"> Restaurants </a> |
-            <a href="?command=activities"> Activities </a> |
-            <a href="?command=review"> Review </a> |
-            <a href="?command=what"> What Should I do? </a> |
-            <!-- NEED TO MAKE A PIC LATER  -->
-            <a href="?command=profile">Profile</a>
-            <!-- search bar -->
-            <input type="text" placeholder="Search Here" />
           </div>
         </div>
       </nav>
