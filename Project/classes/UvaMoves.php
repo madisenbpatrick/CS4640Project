@@ -337,24 +337,12 @@ class UvaMoves{
     private function what(){
         $uvaMoves_whatReview = $this->loadWhat();
 
-        $user = [
-            "name" => $_COOKIE["name"],
-            "email" => $_COOKIE["email"],
-            "id" => $_COOKIE["id"],
-        ];
-
         // $data = $this->db->query("select * from uvaMoves_reviews where category = ? order by rand();","s","r_restaurant");
 
         include("templates/what.php");
     }
 
     private function loadWhat(){
-
-        $user = [
-            "name" => $_COOKIE["name"],
-            "email" => $_COOKIE["email"],
-            "id" => $_COOKIE["id"],
-        ];
 
         // $data = $this->db->query("select * from uvaMoves_reviews where category = ? order by rand();","s","r_restaurant");
 
