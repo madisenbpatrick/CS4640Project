@@ -61,6 +61,7 @@ class UvaMoves{
     private function login(){
         if (!isset($_COOKIE["email"])) {
             // they need to see the login
+            
             $command = "login";
         }
 
@@ -78,7 +79,11 @@ class UvaMoves{
         }
 
         if (isset($_POST["email"]) && ($_POST["email"] != "") && $_POST["password"] != "") {
-
+            $email_regex = "/^[\w\-\.+]+@([\w\-]+\.)+[\w\-]{2,4}$/";
+            $valid_email = preg_match($email_regex, $_POST["email"])? true: false;
+            if (!$valid_email){
+                return false;
+            }
             $data = $this->db->query("select * from uvaMoves_users where email = ?;", "s", $_POST["email"]);
             if ($data === false) {
                 $error_msg = "Error checking for user";
