@@ -15,15 +15,21 @@
 
     <title>UVA MOVES</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.css"
-      rel="stylesheet"
-    />
-    <link
       rel="stylesheet/less"
       type="text/css"
       href="styles/indexstyles.less"
     />
-
+    <link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU"
+			crossorigin="anonymous"
+		/>
+		<script
+			src="https://code.jquery.com/jquery-3.6.0.js"
+			integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+			crossorigin="anonymous"
+		></script>
     <style>
     @media only screen and (max-width: 1200px) {
       [class*="col-"] {
@@ -63,6 +69,32 @@
       }
     }
   </style>
+
+    
+  <script type="text/javascript">
+    $(document).ready(function () {
+      // prompt user to get current location, else default?
+      // 1. load home page content
+      load_homepage();
+    });
+
+   
+    function load_homepage(){
+      // $.get( "ajax/test.html", function( data ) {
+        $.get("../?command=searchMap", { lat: "0", lon: "0", width: $(window).width()}, function(data){
+        var hp_result = data;
+        // parsing results to 
+        for (var i = 0; i < hp_result.length-1; i++){
+          $("#hpContent").append(hp_result[i]);
+        }
+
+      });
+    }
+    // if user clicks next page, will display previous button
+    
+    
+  </script>
+
   </head>
 
   <body>
@@ -96,61 +128,20 @@
       <button><a href="?command=what"> Random Move </a></button>
     </div>
 
-    <!-- a bunch of restaurants/ activities -->
-    <!-- this will be produced using php code later -->
-    <div class="container showdown">
-      <div class="row restaurants">
-        <div class="col col-sm-auto col-md-6 left">
-          <!-- pics on left-->
-          <a
-            class="btn btn-outline-danger btn-sm"
-            href="./del?id="
-            role="button"
-            >Not interested?</a
-          >
-          &nbsp;
+    <div class="container">
+      <!-- display at 5 restaurants and 4 activities? -->
+      <div class="row" id="hpContent">
+        
+      </div>
+    </div>
+    <div class="container">
+      <div>
 
-          <!-- img will pop up after click will add this function later using bootstrap modal?-->
-          <!-- <img
-            class="img-fluid"
-            src="https://images.squarespace-cdn.com/content/v1/5b1f11e53c3a537ba562331e/1539476146313-8G9HUCOZTO8ELTYJNZKN/front+of+the+building+.JPG"
-            alt="villa"
-          /> -->
-
-          <div id="map">
-
-          </div>
-        </div>
-        <div class="col col-md-6 col-sm-auto right">
-          <!-- reviews and info the right, static page for now -->
-          <div class="row">
-            <!--  info, table -->
-            <div class="card text-center">
-              <div class="card-header">The Villa Diner</div>
-              <div class="card-body">
-                <div class="table-responsive">
-                  <table class="table table-sm">
-                    <thead>
-                      <th scope="col">rating</th>
-                      <th scope="col">address</th>
-                      <th scope="col">contact</th>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>4.5</td>
-                        <td>1250 Emmet Street N</td>
-                        <td>434-296-9977</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              <div class="card-footer text-muted">
-                <a href="https://www.thevilladiner.com/">view more on </a>
-              </div>
-            </div>
-          </div>
-        </div>
+        <nav aria-label="Page navigation example">
+          <ul class="pagination justify-content-center">
+            <li class="page-item"><a class="page-link" href="#" id="nextPage">Next</a></li>
+          </ul>
+        </nav>
       </div>
     </div>
 
@@ -159,43 +150,14 @@
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
-    <script
-      src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-      integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-      crossorigin="anonymous"
-    ></script>
+    
     <script src="https://cdn.jsdelivr.net/npm/less@4.1.1"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        function initMap() {
-        // The location of Uluru
-        const villa = { lat: 38.054405898608515, lng: -78.49734770169421 };
-        // The map, centered at Uluru
-        const map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 10,
-          center: villa,
-        });
-        // The marker, positioned at Uluru
-        const marker = new google.maps.Marker({
-          position: villa,
-          map: map,
-        });
-      }
-        // var config = {
-        //     method : 'get',
-        //     url : 'https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=38.054405898608515%2C-78.49734770169421&radius=1500&type=restaurant&keyword=villa&key=AIzaSyBJKHyxTsg6-mlXDK-ahlEv7bSziy63oCY',
-        //     headers: {"Access-Control-Allow-Origin": "*"}
-        // };
-        // axios(config)
-        // .then(function (response) {
-        // console.log(JSON.stringify(response.data));
-        // })
-        // .catch(function (error) {
-        // console.log(error);
-        // });
+   
     
+    <script type="text/javascript">
+      
     </script>
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.26.1/axios.min.js" integrity="sha512-bPh3uwgU5qEMipS/VOmRqynnMXGGSRv+72H/N260MQeXZIK4PG48401Bsby9Nq5P5fz7hy5UGNmC/W1Z51h2GQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script async
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBJKHyxTsg6-mlXDK-ahlEv7bSziy63oCY&callback=initMap">
