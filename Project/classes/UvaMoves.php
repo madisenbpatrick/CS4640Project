@@ -2,9 +2,8 @@
 
 class UvaMoves{
     private $command;
-    
     private $db;
-
+    
     public function __construct($command)
     {
         $this->command = $command;
@@ -53,6 +52,9 @@ class UvaMoves{
             case "searchMap":
                 $this->searchMap();
                 break;
+            case "image":
+                $this->image();
+                break;
             // default: 
             //     $this->homepage();
         }
@@ -61,6 +63,7 @@ class UvaMoves{
     private function login(){
         if (!isset($_COOKIE["email"])) {
             // they need to see the login
+            
             $command = "login";
         }
 
@@ -78,7 +81,11 @@ class UvaMoves{
         }
 
         if (isset($_POST["email"]) && ($_POST["email"] != "") && $_POST["password"] != "") {
-
+            $email_regex = "/^[\w\-\.+]+@([\w\-]+\.)+[\w\-]{2,4}$/";
+            $valid_email = preg_match($email_regex, $_POST["email"])? true: false;
+            if (!$valid_email){
+                return false;
+            }
             $data = $this->db->query("select * from uvaMoves_users where email = ?;", "s", $_POST["email"]);
             if ($data === false) {
                 $error_msg = "Error checking for user";
@@ -357,23 +364,80 @@ class UvaMoves{
     }
 
     public function searchMap(){
-        //do a google search by name
-        //result returned in json
-        //need api key, so hide in server
-        // echo result from db
-        //$restaurants = $this->db->query("select r_cor from restaurants where r_name = ?", "s", "villa diner");
-        // $restaurants = json_encode(["lat" => 38.054405898608515, "lng" => -78.49734770169421])
-        // header('Content-type:application/json;charset=utf-8');
-        // $cor = explode(",",$restaurants[0]["r_cor"]);
-        // echo json_encode($cor, JSON_UNESCAPED_UNICODE);
-        //header('Content-type:application/json;charset=utf-8');
-        // $cor = ['38.054405898608515', '-78.49734770169421'];
-        // echo json_encode($cor, JSON_UNESCAPED_UNICODE);
-
-        header('Content-type:application/json;charset=utf-8');
+        // suppose we have user's lon and lat, which is posted
+        // 
+        // if (isset($_POST["lat"]) && isset($_POST["lon"]){
+        //     // do query map here
+            
+        // }
+        // $user = [
+        //     "name" => $_COOKIE["name"],
+        //     "email" => $_COOKIE["email"],
+        //     "id" => $_COOKIE["id"],
+        // ];
         $cor = ['38.054405898608515', '-78.49734770169421'];
-        echo json_encode($cor, JSON_UNESCAPED_UNICODE);
-        return;
+        $nearby_json = null;
+        // check if db has user's homepage
+        // $user_search = $this->db->query("select * from uvamoves_homepage where user_id = ?;", "s", $user["id"]);
+        // if ($user_search === false){
+        //     $nearby_search = file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=&location=".$cor[0]."%2C".$cor[1]."&radius=1500&type=restaurant&key=".Config::$map["api_key"], true);
+        //     $insert = $this->db->query("insert into uvamoves_homepage (user_id, homepage) values (?, ?);", "is", $user["id"], $nearby_search);
+        //     if ($insert === false) {
+        //         echo "something is wrong";
+        //         return;
+        //     }
+        //     $nearby_json = json_decode($nearby_search);
+        // } else {
+        //     $nearby_json = json_decode($user_search);
+            
+        // }
+
+        $nearby_json = json_decode( file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=&location=".$cor[0]."%2C".$cor[1]."&radius=1500&type=restaurant&key=".Config::$map["api_key"], true));
+        // $nearby_json = json_decode(file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=&location=38.054405898608515%2C-78.49734770169421&radius=1500&type=restaurant&keyword=cruise&key=AIzaSyBJKHyxTsg6-mlXDK-ahlEv7bSziy63oCY"), true);
+        // setcookie("hp_next_token", $nearby_json["next_page_token"], time() + 3600);
+        // format html, customize json(html) to return
+    
+        if ($nearby_json === false){
+            echo "something is wrong";
+            return;
+        } else {
+            $next_page_token = $nearby_json->next_page_token;
+            $html_arr = array();
+            $img_width = 200;
+            if(isset($_GET["width"])){
+                $img_width = intval($_GET["width"]/3);
+            }
+            foreach ($nearby_json->results as $idx => $item) {
+                $lat_lng = $item->geometry->location->lat." ".$item->geometry->location->lng;
+                $photo = json_decode(json_encode($item->photos[0], JSON_PRETTY_PRINT), true);
+                $html = "<div id=".$idx." class=col-md-4><div class=card mb-4 box-shadow><img class=card-img-top src=../?command=image&width=".$img_width."&ref=".$photo["photo_reference"]." alt=restaurant image><div class=card-body><p class=card-text>Name: ".$item->name."</p><p class=card-text>Address: ".$item->vicinity."</p><div class=d-flex justify-content-between align-items-center><div class=btn-group><button type=button class=btn btn-sm btn-outline-secondary id=".$idx."data-latlng=".$lat_lng.">View On Map</button></div></div></div></div>";
+                array_push($html_arr, $html);
+            } 
+            array_push($html_arr, $next_page_token);
+            header('Content-type:application/json;charset=utf-8');
+            echo json_encode($html_arr, JSON_UNESCAPED_UNICODE);
+            
+        }
+        
+    }
+    //return the image given reference
+    function image(){
+        if (isset($_GET["ref"]) && isset($_GET["width"])){
+            $img = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=Aap_uEA7vb0DDYVJWEaX3O-AtYp77AaswQKSGtDaimt3gt7QCNpdjp1BkdM6acJ96xTec3tsV_ZJNL_JP-lqsVxydG3nh739RE_hepOOL05tfJh2_ranjMadb3VoBYFvF0ma6S24qZ6QJUuV6sSRrhCskSBP5C1myCzsebztMfGvm7ij3gZT&key=AIzaSyBJKHyxTsg6-mlXDK-ahlEv7bSziy63oCY";
+            // $img = Config::$map["photo_search"]."maxwidth=".$_GET["width"]."&photo_reference=".$_GET["ref"]."&key=".Config::$map["api_key"];
+            // $img = Config::$map["photo_search"]."maxwidth=200&photo_reference=".$_GET["ref"]."&key=".Config::$map["api_key"];
+            // $imginfo = getimagesize($img);
+            // header("Content-type: {$imginfo['mime']}");
+            // readfile($img);
+            // exit;
+            $fp = fopen($img, 'rb');
+            header('Content-Type: image/jpeg');
+            fpassthru($fp);
+            exit;
+        }
+        else {
+            echo "no ref?";
+        }
     }
 }
 
