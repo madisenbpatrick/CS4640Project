@@ -55,6 +55,11 @@ class UvaMoves{
             case "image":
                 $this->image();
                 break;
+
+  case "editProfile":
+                    $this->editProfile();
+                    break;
+
             // default: 
             //     $this->homepage();
         }
@@ -83,6 +88,8 @@ class UvaMoves{
 
         if (isset($_POST["email"]) && ($_POST["email"] != "") && $_POST["password"] != "") {
             $email_regex = "/^[\w\-\.+]+@([\w\-]+\.)+[\w\-]{2,4}$/";
+
+
             $pwd_regex = "/[\w\-\.@]{8,15}/";
             $valid_email = preg_match($email_regex, $_POST["email"])? true: false;
             if (!$valid_email){
@@ -92,6 +99,7 @@ class UvaMoves{
             // include password length check 
             if (preg_match($pwd_regex, $_POST["password"]) == 1 && strlen($_POST["password"]) < 16){
                 $error_msg = "Your password length should be between 8 and 15";
+
                 return false;
             }
             $data = $this->db->query("select * from uvaMoves_users where email = ?;", "s", $_POST["email"]);
@@ -194,10 +202,17 @@ class UvaMoves{
     private function profile(){
         setcookie("url", "profile", time() + 3600);
         $_SESSION['url'] = 'profile';
+       
 
         if(!isset($_SESSION['email'])){ //if login in session is not set
             header("Location: ?command=login");
         }
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+            "url" => $_COOKIE["url"],
+        ];
 
         include("templates/profile.php");
     }
@@ -232,6 +247,17 @@ class UvaMoves{
             $error_msg = "No Reviews yet";
         } 
         return $data;                       
+    }
+    private function editProfile(){
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+        ];
+        $q = $this->db->query("update uvaMoves_users set email = ?, name=? where id = ?;", "sss", $_POST["email"], $_POST["name"], $user["id"]);
+
+        header("Location: ?command=profile");
+        
     }
     
     private function editReview(){
@@ -381,6 +407,7 @@ class UvaMoves{
     }
 
     public function searchMap(){
+
         // suppose we have user
         // try to load from user_table[homepage]
         // next feature
@@ -437,6 +464,7 @@ class UvaMoves{
         }
 
         // $nearby_json = json_decode( file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=&location=".$cor[0]."%2C".$cor[1]."&radius=1500&type=restaurant&key=".Config::$map["api_key"], true));
+
         // $nearby_json = json_decode(file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=&location=38.054405898608515%2C-78.49734770169421&radius=1500&type=restaurant&keyword=cruise&key=AIzaSyBJKHyxTsg6-mlXDK-ahlEv7bSziy63oCY"), true);
         // setcookie("hp_next_token", $nearby_json["next_page_token"], time() + 3600);
         // format html, customize json(html) to return
@@ -454,7 +482,9 @@ class UvaMoves{
             foreach ($nearby_json->results as $idx => $item) {
                 $lat_lng = $item->geometry->location->lat." ".$item->geometry->location->lng;
                 $photo = json_decode(json_encode($item->photos[0], JSON_PRETTY_PRINT), true);
+
                 $html = "<div id=".$idx." class=col-md-4><div class=card mb-4 box-shadow><img class=card-img-top src=?command=image&width=".$img_width."&ref=".$photo["photo_reference"]." alt=restaurant image><div class=card-body><p class=card-text>Name: ".$item->name."</p><p class=card-text>Address: ".$item->vicinity."</p><div class=d-flex justify-content-between align-items-center><div class=btn-group><button type=button class=btn btn-sm btn-outline-secondary id=".$idx."data-latlng=".$lat_lng.">View On Map</button></div></div></div></div>";
+
                 array_push($html_arr, $html);
             } 
             array_push($html_arr, $next_page_token);
@@ -467,8 +497,10 @@ class UvaMoves{
     //return the image given reference
     function image(){
         if (isset($_GET["ref"]) && isset($_GET["width"])){
+
             // $img = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=Aap_uEA7vb0DDYVJWEaX3O-AtYp77AaswQKSGtDaimt3gt7QCNpdjp1BkdM6acJ96xTec3tsV_ZJNL_JP-lqsVxydG3nh739RE_hepOOL05tfJh2_ranjMadb3VoBYFvF0ma6S24qZ6QJUuV6sSRrhCskSBP5C1myCzsebztMfGvm7ij3gZT&key=AIzaSyBJKHyxTsg6-mlXDK-ahlEv7bSziy63oCY";
             $img = Config::$map["photo_search"]."maxwidth=".$_GET["width"]."&photo_reference=".$_GET["ref"]."&key=".Config::$map["api_key"];
+
             // $img = Config::$map["photo_search"]."maxwidth=200&photo_reference=".$_GET["ref"]."&key=".Config::$map["api_key"];
             // $imginfo = getimagesize($img);
             // header("Content-type: {$imginfo['mime']}");

@@ -76,17 +76,20 @@
       // prompt user to get current location, else default?
       // 1. load home page content
       load_homepage();
+
       $("#nextPage").on("click", function(){
         //request next page
         // time out for couple second
         
         load_nextpage();
       });
+
     });
 
    
     function load_homepage(){
       // $.get( "ajax/test.html", function( data ) {
+
 
         $.get("../?command=searchMap", { lat: "0", lon: "0", width: $(window).width()}, function(data){
         var hp_result = data;
@@ -118,6 +121,7 @@
     }
     // if user clicks next page, will display previous button
     // create table uvamoves_users ( id int not null, homepage text not null, email text not null, name text not null, password text not null, PRIMARY KEY (id) );
+
     
   </script>
 
