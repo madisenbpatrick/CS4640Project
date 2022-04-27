@@ -106,7 +106,7 @@
                       <button type="submit" class="btn btn-primary"> Delete </button>
                     </form> -->
                     <button class="btn btn-primary" onclick="editReview('<?php echo $id?>')"> Edit </button>
-                    <button class="btn btn-primary" onclick="deleteReview('<?php echo $id?>')"> Delete </button>
+                    <button class="btn btn-primary" id="deleteBut" onclick="deleteReview('<?php echo $id?>')"> Delete </button>
                   </div>
                 </div>
                 <?php 
@@ -123,13 +123,23 @@
     </div>
 
   </section>
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+    </script>
+
+ 
+</script>
   <script>
+  
     function editReview(reviewID){
       location.href = "?command=editReview&reviewID="+ reviewID;      
     }
     function deleteReview(reviewID){
-      location.href = "?command=deleteReview&reviewID="+reviewID;
+      if(confirm("Are you sure you want to Delete Review?") == true){
+        location.href = "?command=deleteReview&reviewID="+reviewID;
+      }
     }
+    
   </script>
   </body>
 </html>
