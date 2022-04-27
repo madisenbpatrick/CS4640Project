@@ -88,7 +88,7 @@
     function load_homepage(){
       // $.get( "ajax/test.html", function( data ) {
 
-        $.get("../?command=searchMap", { lat: "0", lon: "0", width: $(window).width()}, function(data){
+        $.get("?command=searchMap", { lat: "0", lon: "0", width: $(window).width()}, function(data){
         var hp_result = data;
         // parsing results to 
         for (var i = 0; i < hp_result.length-1; i++){
@@ -102,7 +102,7 @@
         // get token 
         var token = $("#nextPage").data();
         // alert(token);
-        $.get("../?command=searchMap", { next_page: token.token, width: $(window).width()}, function(data){
+        $.get("?command=searchMap", { next_page: token.token, width: $(window).width()}, function(data){
         var hp_result = data;
         // parsing results to 
         // remove current stuff

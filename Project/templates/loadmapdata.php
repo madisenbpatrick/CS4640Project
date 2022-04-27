@@ -91,11 +91,11 @@
         $.get("../?command=searchMap", { lat: "0", lon: "0", width: $(window).width()}, function(data){
         var hp_result = data;
         // parsing results to 
+        $("#nextPage").data("token", hp_result[hp_result.length-1]);
         for (var i = 0; i < hp_result.length-1; i++){
           $("#hpContent").append(hp_result[i]);
         }
         // assign token data to next page
-        $("#nextPage").data("token", hp_result[hp_result.length-1]);
       });
     }
     function load_nextpage(){

@@ -454,7 +454,7 @@ class UvaMoves{
             foreach ($nearby_json->results as $idx => $item) {
                 $lat_lng = $item->geometry->location->lat." ".$item->geometry->location->lng;
                 $photo = json_decode(json_encode($item->photos[0], JSON_PRETTY_PRINT), true);
-                $html = "<div id=".$idx." class=col-md-4><div class=card mb-4 box-shadow><img class=card-img-top src=../?command=image&width=".$img_width."&ref=".$photo["photo_reference"]." alt=restaurant image><div class=card-body><p class=card-text>Name: ".$item->name."</p><p class=card-text>Address: ".$item->vicinity."</p><div class=d-flex justify-content-between align-items-center><div class=btn-group><button type=button class=btn btn-sm btn-outline-secondary id=".$idx."data-latlng=".$lat_lng.">View On Map</button></div></div></div></div>";
+                $html = "<div id=".$idx." class=col-md-4><div class=card mb-4 box-shadow><img class=card-img-top src=?command=image&width=".$img_width."&ref=".$photo["photo_reference"]." alt=restaurant image><div class=card-body><p class=card-text>Name: ".$item->name."</p><p class=card-text>Address: ".$item->vicinity."</p><div class=d-flex justify-content-between align-items-center><div class=btn-group><button type=button class=btn btn-sm btn-outline-secondary id=".$idx."data-latlng=".$lat_lng.">View On Map</button></div></div></div></div>";
                 array_push($html_arr, $html);
             } 
             array_push($html_arr, $next_page_token);
