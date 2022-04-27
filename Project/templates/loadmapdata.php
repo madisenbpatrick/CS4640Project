@@ -76,22 +76,48 @@
       // prompt user to get current location, else default?
       // 1. load home page content
       load_homepage();
+      $("#nextPage").on("click", function(){
+        //request next page
+        // time out for couple second
+        
+        load_nextpage();
+      });
     });
 
    
     function load_homepage(){
       // $.get( "ajax/test.html", function( data ) {
+
         $.get("../?command=searchMap", { lat: "0", lon: "0", width: $(window).width()}, function(data){
         var hp_result = data;
         // parsing results to 
+        $("#nextPage").data("token", hp_result[hp_result.length-1]);
         for (var i = 0; i < hp_result.length-1; i++){
           $("#hpContent").append(hp_result[i]);
         }
-
+        // assign token data to next page
+      });
+    }
+    function load_nextpage(){
+        // get token 
+        var token = $("#nextPage").data();
+        // alert(token);
+        $.get("../?command=searchMap", { next_page: token.token, width: $(window).width()}, function(data){
+        var hp_result = data;
+        // parsing results to 
+        // remove current stuff
+        $("#hpContent").empty();
+        for (var i = 0; i < hp_result.length-1; i++){
+          $("#hpContent").append(hp_result[i]);
+        }
+        $("#nextPage").data("token", hp_result[hp_result.length=1]);
+      })
+      .fail(function() {
+        alert( "your next page token is corrupted, try refreshing your page!" );
       });
     }
     // if user clicks next page, will display previous button
-    
+    // create table uvamoves_users ( id int not null, homepage text not null, email text not null, name text not null, password text not null, PRIMARY KEY (id) );
     
   </script>
 
