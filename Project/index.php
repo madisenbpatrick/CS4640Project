@@ -9,7 +9,7 @@ if (isset($_GET["command"])){
     $command = $_GET["command"];
 }
 
-// if (!isset($_COOKIE["email"])) {
+// if (!isset($_SESSION["email"])) {
 //     // they need to see the login
 //     $command = "login";
 // }
