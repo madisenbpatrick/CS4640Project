@@ -24,6 +24,8 @@
       type="text/css"
       href="styles/indexstyles.less"
     />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+    </script>
 
     <style>
     @media only screen and (max-width: 1200px) {
@@ -103,7 +105,8 @@
                         echo "<div class='alert alert-danger'>$error_msg</div>";
                     }
                 ?>
-                <form action="?command=login" method="post">
+                <form action="?command=login" method="post" >
+                
                     <div class="mb-3">
                         <label for="email" class="form-label">Email</label>
                         <input type="email" class="form-control" id="email" name="email"/>
@@ -117,14 +120,52 @@
                         <input type="password" class="form-control" id="password" name="password"/>
                     </div>
                     <div class="text-center">                
-                    <button type="submit" class="btn btn-primary"> Submit </button>
+                    <button type="submit" class="btn btn-primary" id="loginSubmit" > Submit </button>
                     </div>
                 </form>
+
                 </div>
+                
+                <!-- <p id="messageAlert"></p> -->
             </div>
         </div>
-        <script>
-          // check user input with js
+
+
+         <script type="text/javascript" language="javascript">
+  $(document ).ready(function() {
+    $("#loginSubmit").click(function(event){
+      event.preventDefault();
+      // JS OBJECTS
+      let userDetails = {
+          email: $("#email").val(),
+          name: $("#name").val(),
+          password: $("#password").val()
+      };
+      let email = userDetails.email;
+      let name = userDetails.name;
+      let password = userDetails.password;
+      console.log(email);
+      let text;
+      if(!email && !name && !password){
+           alert("Please Enter Email, Name and Password");
+      }
+      else if(!email){
+          alert("Please Enter Email");
+        }
+
+      else if(!name){
+          alert("Please Enter Your Name");
+      }
+      else if(!password){
+          alert("Please Enter Your Password");
+      }
+      else{
+
+        $("#loginSubmit").unbind('click').click()
+      }
+      
+    });
+});
           
         </script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>

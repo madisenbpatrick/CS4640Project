@@ -103,5 +103,65 @@
     <a href="?command=yourReviews"><p> Your Reviews</p></a>
     <a href="?command=yourFavorites"><p> Favorites</p></a>
   </section>
+  <section class = "profileInfo">
+    <div class ="col col-md-6 col-sm-auto right">
+    <div class="row">
+    <form action="?command=editProfile" method="post">
+    <center>
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name" placeholder="<?=$user["name"]?>"/>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="<?=$user["email"]?>"/>
+      </div>
+      <button type="submit" class="btn btn-primary" id="update" > Update </button>
+      </center>
+    </form>
+    </div>
+    </div>
+  </section>
+
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+    </script>
+
+  <script>
+  $(document ).ready(function() {
+    $("#update").click(function(event){
+      event.preventDefault();
+      // JS OBJECTS
+      let userDetails = {
+          email: $("#email").val(),
+          name: $("#name").val(),
+      };
+      let email = userDetails.email;
+      let name = userDetails.name;
+      console.log(email);
+      let text;
+      if(!email && !name){
+           alert("nothing to update");
+      }
+      else if(!email){
+        alert("nothing to update, please add your email");
+      }
+      else if(!name){
+        alert("please add your name");
+      }
+      else{
+        $("#name").attr('placeholder',name);
+        $("#email").attr('placeholder',email);
+        $("#update").unbind('click').click();
+      }
+      
+      
+      
+    });
+});
+    
+
+      
+      
+  </script>
   </body>
 </html>

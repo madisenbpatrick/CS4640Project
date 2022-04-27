@@ -55,6 +55,11 @@ class UvaMoves{
             case "image":
                 $this->image();
                 break;
+
+  case "editProfile":
+                    $this->editProfile();
+                    break;
+
             // default: 
             //     $this->homepage();
         }
@@ -63,17 +68,18 @@ class UvaMoves{
     private function login(){
         if (!isset($_COOKIE["email"])) {
             // they need to see the login
-            
             $command = "login";
         }
 
         else {
             // if login go straight to page 
             $user = [
-                "name" => $_COOKIE["name"],
+                "name" => $_SESSION["name"],
                 "email" => $_COOKIE["email"],
-                "id" => $_COOKIE["id"],
-                "url" => $_COOKIE["url"],
+                "id" => $_SESSION["id"],
+                // "url" => $_COOKIE["url"],
+                "url" => empty($_GET["command"])? "homepage" : $_GET["command"],
+
             ];
             $url = $user["url"];
             header('Location: ?command='. $url);
@@ -82,8 +88,18 @@ class UvaMoves{
 
         if (isset($_POST["email"]) && ($_POST["email"] != "") && $_POST["password"] != "") {
             $email_regex = "/^[\w\-\.+]+@([\w\-]+\.)+[\w\-]{2,4}$/";
+
+
+            $pwd_regex = "/[\w\-\.@]{8,15}/";
             $valid_email = preg_match($email_regex, $_POST["email"])? true: false;
             if (!$valid_email){
+                $error_msg = "<div class='alert alert-danger'>you have not provided valid email!</div>";
+                return false;
+            }
+            // include password length check 
+            if (preg_match($pwd_regex, $_POST["password"]) == 1 && strlen($_POST["password"]) < 16){
+                $error_msg = "Your password length should be between 8 and 15";
+
                 return false;
             }
             $data = $this->db->query("select * from uvaMoves_users where email = ?;", "s", $_POST["email"]);
@@ -91,21 +107,19 @@ class UvaMoves{
                 $error_msg = "Error checking for user";
             } else if (!empty($data)) {
                 if (password_verify($_POST["password"], $data[0]["password"])) {
-                    setcookie("name", $data[0]["name"], time() + 3600);
-                    setcookie("email", $data[0]["email"], time() + 3600);
-                    setcookie("id",$data[0]["id"],time()+3600);
+                    $name = $_SESSION['name'] = $data[0]["name"];
+                    $email = $_SESSION['email'] = $data[0]["email"];
+                    $id = $_SESSION['id'] = $data[0]["id"];
+                    setcookie("name", $name, time() + 3600);
+                    setcookie("email", $email, time() + 3600);
+                    setcookie("id", $id,time()+3600);
                     
                     $user = [
-                        "name" => $_COOKIE["name"],
-                        "email" => $_COOKIE["email"],
-                        "id" => $_COOKIE["id"],
-                        "url" => $_COOKIE["url"],
+                        "name" => $name,
+                        "email" => $email,
+                        "id" => $id,
+                        "url" => isset($_GET["command"])? $_GET["command"] : "homepage"
                     ];
-
-                    $_SESSION['name'] = $data[0]["name"];
-                    $_SESSION['email'] = $data[0]["email"];
-                    $_SESSION['id'] = $data[0]["id"];
-
                     // header('Location: ' . $_SERVER['HTTP_REFERER']);
                         // set a cookie for the last command 
                     $url = $user["url"];
@@ -127,23 +141,22 @@ class UvaMoves{
                     setcookie("id",$data2[0]["id"],time()+3600);
 
                     $user = [
-                        "name" => $_COOKIE["name"],
-                        "email" => $_COOKIE["email"],
-                        "id" => $_COOKIE["id"],
-                        "url" => $_COOKIE["url"],
+                        "name" => $_POST["name"],
+                        "email" => $_POST["email"],
+                        "id" => $data2[0]["id"],
+                        // "url" => $_COOKIE["url"],
+                        "url" => empty($_GET["command"])? "homepage" : $_GET["command"],
                     ];
 
                     $_SESSION['name'] = $_POST["name"];
                     $_SESSION['email'] = $_POST["email"];
                     $_SESSION['id'] = $data2[0]["id"];
-
                     $url = $user["url"];
                     header('Location: ?command='. $url);
                     //header("Location: ?command=review");
                 }
             }
         }
-
         include("templates/login.php");
 
     }
@@ -189,10 +202,17 @@ class UvaMoves{
     private function profile(){
         setcookie("url", "profile", time() + 3600);
         $_SESSION['url'] = 'profile';
+       
 
         if(!isset($_SESSION['email'])){ //if login in session is not set
             header("Location: ?command=login");
         }
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+            "url" => $_COOKIE["url"],
+        ];
 
         include("templates/profile.php");
     }
@@ -227,6 +247,17 @@ class UvaMoves{
             $error_msg = "No Reviews yet";
         } 
         return $data;                       
+    }
+    private function editProfile(){
+        $user = [
+            "name" => $_COOKIE["name"],
+            "email" => $_COOKIE["email"],
+            "id" => $_COOKIE["id"],
+        ];
+        $q = $this->db->query("update uvaMoves_users set email = ?, name=? where id = ?;", "sss", $_POST["email"], $_POST["name"], $user["id"]);
+
+        header("Location: ?command=profile");
+        
     }
     
     private function editReview(){
@@ -364,35 +395,64 @@ class UvaMoves{
     }
 
     public function searchMap(){
-        // suppose we have user's lon and lat, which is posted
-        // 
-        // if (isset($_POST["lat"]) && isset($_POST["lon"]){
-        //     // do query map here
-            
-        // }
-        // $user = [
-        //     "name" => $_COOKIE["name"],
-        //     "email" => $_COOKIE["email"],
-        //     "id" => $_COOKIE["id"],
-        // ];
-        $cor = ['38.054405898608515', '-78.49734770169421'];
-        $nearby_json = null;
-        // check if db has user's homepage
-        // $user_search = $this->db->query("select * from uvamoves_homepage where user_id = ?;", "s", $user["id"]);
-        // if ($user_search === false){
-        //     $nearby_search = file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=&location=".$cor[0]."%2C".$cor[1]."&radius=1500&type=restaurant&key=".Config::$map["api_key"], true);
-        //     $insert = $this->db->query("insert into uvamoves_homepage (user_id, homepage) values (?, ?);", "is", $user["id"], $nearby_search);
-        //     if ($insert === false) {
-        //         echo "something is wrong";
-        //         return;
-        //     }
-        //     $nearby_json = json_decode($nearby_search);
-        // } else {
-        //     $nearby_json = json_decode($user_search);
-            
-        // }
 
-        $nearby_json = json_decode( file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=&location=".$cor[0]."%2C".$cor[1]."&radius=1500&type=restaurant&key=".Config::$map["api_key"], true));
+        // suppose we have user
+        // try to load from user_table[homepage]
+        // next feature
+
+        // $html = "";
+        // $user = [
+        //     "name" => $_SESSION["name"],
+        //     "email" => $_SESSION["email"],
+        // ];
+        // try {
+        //     // if user's home page has stuff
+        //     $data = $this->db->query("select * from uvamoves_homepage where email = ?;", "s", $user["email"]);
+        //     if (!empty($data[0]["homepage"])){
+        //         // suppose json_decode gets array of restaurant ids
+        //         $res = $this->db->query("select * from uvamoves_restaurants where id in (".implode(',',json_decode($data[0]["homepage"])).");");
+        //         // load restuarants details
+        //         // should have $lat_lng, photo reference, and addr
+        //         foreach ($res as $key => $row) {
+        //             // $row["lat_lng"] = 
+        //             // $row["photo"] = 
+        //             // $row["reference"] = 
+
+        //             // construct html
+        //             $html += "";
+        //         }
+                
+        //     } else {
+        //         if (!isset($_POST["lat"]) || !isset($_POST["lng"])){
+        //             $cor = ['38.054405898608515', '-78.49734770169421']; // villa diner location, by default
+        //         } else {
+        //             $cor = [$_POST["lat"], $_POST["lng"]];
+        //         }
+        //         $nearby_json = json_decode( file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=&location=".$cor[0]."%2C".$cor[1]."&radius=1500&type=restaurant&key=".Config::$map["api_key"], true));
+        //         // insert restaurants 
+                
+        //     }
+        // } catch (Exception $e){
+        //     echo "Error connecting Database";
+        //     return;
+        // }
+        
+        //
+        $nearby_json = null;
+        
+        if (isset($_GET["next_page"]) && !empty($_GET["next_page"])){
+            $nearby_json = json_decode( file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=".$_GET["next_page"]."&key=".Config::$map["api_key"], true));
+            // $nearby_json = json_decode( file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=Aap_uEAzuhIKrcd5LVeCxV6lFTFtb6K1t86DFD95uixBNORXZ-VDwZngUUcjOEc3Kz0KPDdv_H3sLbviLUKkGaJXEKRDxUR52kKkysXnUycejdIyfv5xhQ4-7RD6GzJDC6mRDG59oV4zu1dJ3oPvP0_oMXQ5dQBcNsGSHrAcNCDgRgOeqIhI8J_sNWv-dlk4ysxxl5KNkZyihB0wEZEt2riW7tGrhAO53M7d3-gisRqSPl4l0klHT5wsBhxv3FRGfmf5-7bXKZbp6sZqiOqEjxbeNFxMXctoDOAH-1BKvywONozHj8rPW9wfoelxqEJ47cfALIuNWKV9MJgm86OwEI6rEEKa6lIME0HUCdy9SplThLfYrxoRJ3j8YVn66QA4wjha-BQEEjnJBBPzOY0dkx3stjyU8kHP9CHaQ5ob50-BIVKA7CvFu7W7kFuA&key=AIzaSyBJKHyxTsg6-mlXDK-ahlEv7bSziy63oCY", true));
+            
+            // echo var_dump($_GET["next_page"]);
+        
+        } else {
+            $cor = ['38.054405898608515', '-78.49734770169421'];
+            $nearby_json = json_decode( file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=&location=".$cor[0]."%2C".$cor[1]."&radius=1500&type=restaurant&key=".Config::$map["api_key"], true));
+        }
+
+        // $nearby_json = json_decode( file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=&location=".$cor[0]."%2C".$cor[1]."&radius=1500&type=restaurant&key=".Config::$map["api_key"], true));
+
         // $nearby_json = json_decode(file_get_contents("https://maps.googleapis.com/maps/api/place/nearbysearch/json?keyword=&location=38.054405898608515%2C-78.49734770169421&radius=1500&type=restaurant&keyword=cruise&key=AIzaSyBJKHyxTsg6-mlXDK-ahlEv7bSziy63oCY"), true);
         // setcookie("hp_next_token", $nearby_json["next_page_token"], time() + 3600);
         // format html, customize json(html) to return
@@ -410,7 +470,9 @@ class UvaMoves{
             foreach ($nearby_json->results as $idx => $item) {
                 $lat_lng = $item->geometry->location->lat." ".$item->geometry->location->lng;
                 $photo = json_decode(json_encode($item->photos[0], JSON_PRETTY_PRINT), true);
-                $html = "<div id=".$idx." class=col-md-4><div class=card mb-4 box-shadow><img class=card-img-top src=../?command=image&width=".$img_width."&ref=".$photo["photo_reference"]." alt=restaurant image><div class=card-body><p class=card-text>Name: ".$item->name."</p><p class=card-text>Address: ".$item->vicinity."</p><div class=d-flex justify-content-between align-items-center><div class=btn-group><button type=button class=btn btn-sm btn-outline-secondary id=".$idx."data-latlng=".$lat_lng.">View On Map</button></div></div></div></div>";
+
+                $html = "<div id=".$idx." class=col-md-4><div class=card mb-4 box-shadow><img class=card-img-top src=?command=image&width=".$img_width."&ref=".$photo["photo_reference"]." alt=restaurant image><div class=card-body><p class=card-text>Name: ".$item->name."</p><p class=card-text>Address: ".$item->vicinity."</p><div class=d-flex justify-content-between align-items-center><div class=btn-group><button type=button class=btn btn-sm btn-outline-secondary id=".$idx."data-latlng=".$lat_lng.">View On Map</button></div></div></div></div>";
+
                 array_push($html_arr, $html);
             } 
             array_push($html_arr, $next_page_token);
@@ -423,8 +485,10 @@ class UvaMoves{
     //return the image given reference
     function image(){
         if (isset($_GET["ref"]) && isset($_GET["width"])){
-            $img = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=Aap_uEA7vb0DDYVJWEaX3O-AtYp77AaswQKSGtDaimt3gt7QCNpdjp1BkdM6acJ96xTec3tsV_ZJNL_JP-lqsVxydG3nh739RE_hepOOL05tfJh2_ranjMadb3VoBYFvF0ma6S24qZ6QJUuV6sSRrhCskSBP5C1myCzsebztMfGvm7ij3gZT&key=AIzaSyBJKHyxTsg6-mlXDK-ahlEv7bSziy63oCY";
-            // $img = Config::$map["photo_search"]."maxwidth=".$_GET["width"]."&photo_reference=".$_GET["ref"]."&key=".Config::$map["api_key"];
+
+            // $img = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photo_reference=Aap_uEA7vb0DDYVJWEaX3O-AtYp77AaswQKSGtDaimt3gt7QCNpdjp1BkdM6acJ96xTec3tsV_ZJNL_JP-lqsVxydG3nh739RE_hepOOL05tfJh2_ranjMadb3VoBYFvF0ma6S24qZ6QJUuV6sSRrhCskSBP5C1myCzsebztMfGvm7ij3gZT&key=AIzaSyBJKHyxTsg6-mlXDK-ahlEv7bSziy63oCY";
+            $img = Config::$map["photo_search"]."maxwidth=".$_GET["width"]."&photo_reference=".$_GET["ref"]."&key=".Config::$map["api_key"];
+
             // $img = Config::$map["photo_search"]."maxwidth=200&photo_reference=".$_GET["ref"]."&key=".Config::$map["api_key"];
             // $imginfo = getimagesize($img);
             // header("Content-type: {$imginfo['mime']}");

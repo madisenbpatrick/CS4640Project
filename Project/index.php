@@ -12,6 +12,11 @@ if (isset($_GET["command"])){
 }
 
 
+// if (!isset($_SESSION["email"])) {
+//     // they need to see the login
+//     $command = "login";
+// }
+
 $moves = new UvaMoves($command);
 session_start();
 $moves->run();

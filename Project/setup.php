@@ -27,3 +27,11 @@ $db->query("create table uvaMoves_reviews (
     primary key (id)
 );");
 
+$db->query("create table uvamoves_restaurants (
+    id int not null,
+    restaurant_name text not null,
+    image text not null,
+    address text not null,
+    PRIMARY KEY (id)
+);");
+
