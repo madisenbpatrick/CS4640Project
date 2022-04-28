@@ -18,7 +18,7 @@
     .allActReviews {
       display: flex;
       flex-direction: column;
-      margin-top: 10%;
+      margin-top: 5%;
       align-items: center;
     }
 
