@@ -77,8 +77,8 @@ class UvaMoves{
                 "name" => $_SESSION["name"],
                 "email" => $_COOKIE["email"],
                 "id" => $_SESSION["id"],
-                // "url" => $_COOKIE["url"],
-                "url" => empty($_GET["command"])? "homepage" : $_GET["command"],
+                "url" => $_COOKIE["url"],
+                // "url" => empty($_GET["command"])? "homepage" : $_GET["command"],
 
             ];
             $url = $user["url"];
@@ -255,8 +255,17 @@ class UvaMoves{
             "id" => $_COOKIE["id"],
         ];
         $q = $this->db->query("update uvaMoves_users set email = ?, name=? where id = ?;", "sss", $_POST["email"], $_POST["name"], $user["id"]);
-
+        $name = $this->db->query("select name from uvaMoves_users where id = ?;", "i",$user["id"]);
+        $n = $name[0]["name"];
+        setcookie("name", $n, time() +3600);
+        $_SESSION['name'] = $name;
+        $e = $this->db->query("select email from uvaMoves_users where id = ?;", "i",$user["id"]);
+        $email = $e[0]["email"];
+        setcookie("email", $email, time() + 3600);
+        $_SESSION['email'] = $email;
         header("Location: ?command=profile");
+
+        return;
         
     }
     
@@ -375,6 +384,13 @@ class UvaMoves{
     private function what(){
         $uvaMoves_whatReview = $this->loadWhat();
 
+        if(isset($_COOKIE["name"]) && isset($_COOKIE["email"]) && isset($_COOKIE["id"])){
+            $user = [
+                "name" => $_COOKIE["name"],
+                "email" => $_COOKIE["email"],
+                "id" => $_COOKIE["id"],
+            ];
+        }
         // $data = $this->db->query("select * from uvaMoves_reviews where category = ? order by rand();","s","r_restaurant");
 
         include("templates/what.php");

@@ -153,6 +153,8 @@
       />
       <button><a href="?command=what"> Random Move </a></button>
     </div>
+    <div>
+    <center><h3>View Different Restaurants Around Charlottesville Below</h3></div></center>
 
     <div class="container">
       <!-- display at 5 restaurants and 4 activities? -->

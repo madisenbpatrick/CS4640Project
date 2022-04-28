@@ -1,6 +1,6 @@
 <?php 
 
-// https://cs4640.cs.virginia.edu/mbp4wwc/CS4640ProjectUVAMoves/Project/
+// https://cs4640.cs.virginia.edu/mbp4wwc/CS4640ProjectUVAMove/Project/
 
 spl_autoload_register(function($classname){
     include "classes/$classname.php";

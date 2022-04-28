@@ -70,28 +70,7 @@
       }
     }
   </style>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
-  </script>
-
-<script type = "text/javascript" language = "javascript">
-$(document ).ready(function() {
-    $("#actRevBut").click(function(event){
-      event.preventDefault();
-      var email = "<?php echo $_SESSION['email'] ?>";
-      
-      
-      console.log(email);
-
-      if(!email){
-        alert("Need to sign in to write a review. Press OK to continue to Login Page")
-      }
-      $("#actRevBut").unbind('click').click()
-       
-    });
-});
-
-
-  </script>
+  
 
       
   </head>
@@ -121,6 +100,15 @@ $(document ).ready(function() {
             <button type="submit" class="btn btn-primary" id="actRevBut"> Write a Review </button>
             </div>
     </div>
+
+    <?php 
+    if(isset($_SESSION['email'])){
+    echo "<input id='email' type = 'hidden' value = '".$_SESSION['email']."'></input>" ;
+    }
+    else{
+    echo "<input id='email' type = 'hidden' value = ''></input>" ;
+    }
+   ?>
 
     <section class = "allActReviews">
     <h4>Activity Reviews</h4>
@@ -175,5 +163,27 @@ $(document ).ready(function() {
   ></script>
   <script src="https://cdn.jsdelivr.net/npm/less@4.1.1"></script>
 
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js">
+  </script>
+
+<script type = "text/javascript" language = "javascript">
+$(document ).ready(function() {
+    $("#actRevBut").click(function(event){
+      event.preventDefault();
+      var email = document.getElementById("email").value;
+      
+      
+      console.log(email);
+
+      if(email == ''){
+        alert("Need to sign in to write a review. Press OK to continue to Login Page")
+      }
+      $("#actRevBut").unbind('click').click()
+       
+    });
+});
+
+
+  </script>
   </body>
 </html>

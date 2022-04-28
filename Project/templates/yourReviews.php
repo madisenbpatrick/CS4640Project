@@ -36,17 +36,17 @@
   </head>
   <body>
     <div class="headerDiv">
-      <header>
+    <header>
         <nav>
           <div class="all">
             <a id="uvaMovesHeader" href="?command=homepage">UVA MOVES</a>
             <div class="test">
-              <a href="?command=restaurant"> Restaurants </a> |
-              <a href="?command=activities"> Activities </a> |
-              <a href="?command=review"> Review </a> |
-              <a href="?command=what"> What Should I do? </a> |
+              <a href="?command=restaurant"> Restaurants </a> 
+              <a href="?command=activities"> Activities </a> 
+              <a href="?command=review"> Review </a> 
+              <a href="?command=what"> What Should I do? </a> 
               <a href="?command=profile">Profile</a>
-              <a href="?command=logout">Logout</a>
+
               <input type="text" placeholder="Search Here" />
             </div>
           </div>

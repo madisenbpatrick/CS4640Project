@@ -101,7 +101,7 @@
   <section class = "profileHeaders">
     <h4> Profile</h4>
     <a href="?command=yourReviews"><p> Your Reviews</p></a>
-    <a href="?command=yourFavorites"><p> Favorites</p></a>
+    
   </section>
   <section class = "profileInfo">
     <div class ="col col-md-6 col-sm-auto right">
