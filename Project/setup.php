@@ -1,7 +1,7 @@
 <?php
 
 // Register the autoloader
-spl_autoload_register(function($classname) {
+spl_autoload_register(function ($classname) {
     include "classes/$classname.php";
 });
 
@@ -34,4 +34,3 @@ $db->query("create table uvamoves_restaurants (
     address text not null,
     PRIMARY KEY (id)
 );");
-

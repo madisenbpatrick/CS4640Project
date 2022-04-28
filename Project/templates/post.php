@@ -13,20 +13,21 @@
         echo "redirecting you back in 5 seconds";
     }
     ?>
-    <script type="text/javascript"> 
-       var num = 4;
-		var URL = "index.html";
+    <script type="text/javascript">
+        var num = 4;
+        var URL = "index.html";
         window.setTimeout("doUpdate()", 1000);
-        function doUpdate(){
-			if(num != 0){
-				num --;
-				window.setTimeout("doUpdate()", 1000);
-			}else{
-				num = 4;
-				window.location = URL;
-			}
-		}
+
+        function doUpdate() {
+            if (num != 0) {
+                num--;
+                window.setTimeout("doUpdate()", 1000);
+            } else {
+                num = 4;
+                window.location = URL;
+            }
+        }
     </script>
 </body>
-    
+
 </html>

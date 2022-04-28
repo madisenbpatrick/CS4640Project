@@ -1,13 +1,13 @@
-<?php 
+<?php
 
 // https://cs4640.cs.virginia.edu/mbp4wwc/CS4640ProjectUVAMove/Project/
 
-spl_autoload_register(function($classname){
+spl_autoload_register(function ($classname) {
     include "classes/$classname.php";
 });
 
 $command = "homepage";
-if (isset($_GET["command"])){
+if (isset($_GET["command"])) {
     $command = $_GET["command"];
 }
 
